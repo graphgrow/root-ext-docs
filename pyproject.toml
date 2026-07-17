@@ -1,0 +1,29 @@
+[project]
+name = "root-ext-docs"
+version = "0.1.0"
+description = "Document-engineering MCP tool server: PDF page rendering and OCR, DOCX/PPTX extraction, image transforms, and archive handling. Extract and derive, never mutate sources."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "mcp>=1.9",
+    "pypdfium2>=4.30",
+    "pillow>=10",
+    "python-docx>=1.1",
+    "python-pptx>=1.0",
+]
+
+[project.scripts]
+root-ext-docs = "root_ext_docs.server:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/root_ext_docs"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
