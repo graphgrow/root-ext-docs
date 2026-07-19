@@ -68,6 +68,15 @@ def main() -> int:
         # tesseract subprocess and therefore need user-program; the
         # derived-write tools (they create artifacts) are user-program
         # writes. The client clamps each to stricter(declared, derived).
+        # The pack's operating instructions (ADR-0025). Only the POINTER
+        # lives in the manifest; the text rides inside the wheel, whose
+        # sha256 this manifest pins — so the signature that covers the
+        # manifest covers the instructions too, with nothing extra to
+        # sign and one copy to keep in sync. Note what is absent: no
+        # field here grants a tool or widens a permission. A skill tells
+        # the model what to do; it can never change what it is allowed
+        # to do.
+        "skill": {"body": "root_ext_docs/SKILL.md"},
         "tools": [
             *(
                 {"name": name, "side_effect": "read", "posture": "sandboxed"}
