@@ -42,7 +42,7 @@ def main() -> int:
     sha256 = hashlib.sha256(wheel.read_bytes()).hexdigest()
 
     manifest = {
-        "schema": 1,
+        "schema": 2,
         "id": "dev.graphgrow.doc-eng",
         "name": "doc-eng",
         "title": "Document Engineering",
@@ -60,14 +60,14 @@ def main() -> int:
             "sha256": sha256,
             "script": "root-ext-docs",
         },
-        # No network anywhere in this pack — OCR is the local tesseract
-        # binary, refused by name when absent.
-        "needs": {},
-        # First-class promotion (ADR-0019): pure-read extraction runs
-        # SANDBOXED — except the OCR tools, which spawn the system
-        # tesseract subprocess and therefore need user-program; the
-        # derived-write tools (they create artifacts) are user-program
-        # writes. The client clamps each to stricter(declared, derived).
+        # ADR-0026 §2: capability GRANTS, not a posture. No tool in this
+        # pack asks for the network — OCR is the local tesseract binary,
+        # refused by name when absent — so no `network` grant appears
+        # below, and the sandbox keeps the network dead for all of them.
+        # The OCR tools were `user-program` only because they spawn a
+        # subprocess; a sandboxed child may spawn one (it inherits the
+        # confinement), so they are confined here like everything else.
+        # The client still clamps each class to stricter(declared, derived).
         # The pack's operating instructions (ADR-0025). Only the POINTER
         # lives in the manifest; the text rides inside the wheel, whose
         # sha256 this manifest pins — so the signature that covers the
@@ -78,19 +78,28 @@ def main() -> int:
         # to do.
         "skill": {"body": "root_ext_docs/SKILL.md"},
         "tools": [
+            # Extraction, including OCR: reads the document, writes
+            # nothing back. Any scratch a converter needs goes to the
+            # sandbox's own temp dir, which is always writable.
             *(
-                {"name": name, "side_effect": "read", "posture": "sandboxed"}
+                {
+                    "name": name,
+                    "side_effect": "read",
+                    "grants": {"filesystem": "roots-read"},
+                }
                 for name in (
                     "pdf_info", "pdf_extract_text",
                     "docx_extract", "pptx_extract", "archive_list",
+                    "ocr_pdf", "ocr_image",
                 )
             ),
+            # These derive artifacts beside the source.
             *(
-                {"name": name, "side_effect": "read", "posture": "user-program"}
-                for name in ("ocr_pdf", "ocr_image")
-            ),
-            *(
-                {"name": name, "side_effect": "write", "posture": "user-program"}
+                {
+                    "name": name,
+                    "side_effect": "write",
+                    "grants": {"filesystem": "roots-write"},
+                }
                 for name in (
                     "pdf_pages_to_images", "image_convert", "image_crop",
                     "image_annotate", "archive_extract",
