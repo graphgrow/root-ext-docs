@@ -5,7 +5,10 @@ description = "Document-engineering MCP tool server: PDF page rendering and OCR,
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "mcp>=1.9",
+    # Upper bound deliberate: MCP 2026-07-28 removes the `initialize`
+    # handshake, so a 2.x SDK would break this server at connect with no
+    # signal. Raise it only with a tested migration.
+    "mcp>=1.9,<2",
     "pypdfium2>=4.30",
     "pillow>=10",
     "python-docx>=1.1",
