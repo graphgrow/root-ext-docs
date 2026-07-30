@@ -1,6 +1,6 @@
 [project]
 name = "root-ext-docs"
-version = "0.2.0"
+version = "0.2.1"
 description = "Document-engineering MCP tool server: PDF page rendering and OCR, DOCX/PPTX extraction, image transforms, and archive handling. Extract and derive, never mutate sources."
 readme = "README.md"
 requires-python = ">=3.10"
