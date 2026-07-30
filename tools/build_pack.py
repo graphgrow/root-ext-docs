@@ -97,6 +97,20 @@ def main() -> int:
         # the model what to do; it can never change what it is allowed
         # to do.
         "skill": {"body": "root_ext_docs/SKILL.md"},
+        # `ocr_image` has always refused by name without tesseract — but
+        # only once called. On the card now, probed, before that (the
+        # same seam ADR-0046 needed for the GPL solvers). Apache-2.0, so
+        # nothing forbids shipping it; it is a ~100 MB native install
+        # with language data, which is its own reason not to.
+        "requires": [
+            {
+                "name": "Tesseract",
+                "commands": ["tesseract"],
+                "install": "brew install tesseract   # or: apt install tesseract-ocr",
+                "why": "It is a large native install with its own language data.",
+                "tools": ["ocr_image"],
+            }
+        ],
         "tools": [
             # Extraction, including OCR: reads the document, writes
             # nothing back. Any scratch a converter needs goes to the
