@@ -913,7 +913,7 @@ wheels = [
 
 [[package]]
 name = "root-ext-docs"
-version = "0.1.1"
+version = "0.2.1"
 source = { editable = "." }
 dependencies = [
     { name = "mcp" },
@@ -930,7 +930,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "mcp", specifier = ">=1.9" },
+    { name = "mcp", specifier = ">=1.9,<2" },
     { name = "pillow", specifier = ">=10" },
     { name = "pypdfium2", specifier = ">=4.30" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8" },
