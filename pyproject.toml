@@ -1,6 +1,6 @@
 [project]
 name = "root-ext-docs"
-version = "0.2.1"
+version = "0.3.0"
 description = "Document-engineering MCP tool server: PDF page rendering and OCR, DOCX/PPTX extraction, image transforms, and archive handling. Extract and derive, never mutate sources."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -36,6 +36,12 @@ artifacts = ["src/root_ext_docs/SKILL.md"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/root_ext_docs"]
+
+# The shipped wheel is compiled (ADR-0097, root-packs/tools/compile_wheel.py).
+# `__init__` and the server module stay source on their own; nothing else
+# here has to.
+[tool.root-pack.compile]
+keep-source = []
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
